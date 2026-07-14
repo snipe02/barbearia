@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
+    />
+    <title>Barbearia WesleyCort - Agendamento</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- Tailwind (opcional, usado apenas para alguns estilos rápidos) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Toast -->
+    <div class="toast" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMsg">Mensagem</span>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+      <div class="lightbox-content" onclick="event.stopPropagation()">
+        <button class="lightbox-close" onclick="closeLightbox()">
+          <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImg" src="" alt="Foto em destaque" />
+        <div class="lightbox-caption" id="lightboxCaption">
+          WesleyCort - Título <small>Legenda</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== APP ===== -->
+    <div class="app-container">
+      <header class="header">
+        <div class="logo-area" id="logoArea">
+          <div class="logo-icon">
+            <img src="imagem/alogo.jpeg" alt="Barbearia Elite" />
+          </div>
+          <div class="logo-text">
+            <h1>WesleyCort</h1>
+            <span>Agendamento inteligente</span>
+          </div>
+        </div>
+        <div class="header-actions"></div>
+      </header>
+
+      <!-- VIEW: Cliente -->
+      <div class="view active" id="viewClient">
+        <!-- Galeria -->
+        <div class="gallery-section">
+          <div class="section-title">
+            <i class="fas fa-images"></i>Cortes finalizados
+          </div>
+          <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+              <div
+                class="slider-slide"
+                data-caption="Moica-america - R$15"
+                data-sub="Estilo versátil e atual"
+              >
+                <img src="imagem/c1.jpeg" alt="Corte moderno" loading="lazy" />
+                <div class="slide-caption">
+                  Moica-america - R$15 <small>Estilo versátil e atual</small>
+                </div>
+              </div>
+              <div
+                class="slider-slide"
+                data-caption="Degradê - R$15"
+                data-sub="Acabamento preciso e sofisticado"
+              >
+                <img
+                  src="imagem/c2.jpeg"
+                  alt="Barba bem feita"
+                  loading="lazy"
+                />
+                <div class="slide-caption">
+                  Degradê - R$15 <small>Acabamento preciso e sofisticado</small>
+                </div>
+              </div>
+              <div
+                class="slider-slide"
+                data-caption="Combo Nevou+ Corte - R$60"
+                data-sub="Transição suave e moderna"
+              >
+                <img src="imagem/c3.jpeg" alt="Corte degradê" loading="lazy" />
+                <div class="slide-caption">
+                  Combo Nevou+ Corte - R$60
+                  <small>Transição suave e moderna</small>
+                </div>
+              </div>
+              <div
+                class="slider-slide"
+                data-caption="Moica + trem - R$15"
+                data-sub="Transição suave e moderna"
+              >
+                <img src="imagem/c6.jpeg" alt="Corte degradê" loading="lazy" />
+                <div class="slide-caption">
+                  Moica + trem - R$15 <small>Transição suave e moderna</small>
+                </div>
+              </div>
+              <div
+                class="slider-slide"
+                data-caption="Combo corte+luzes - 50"
+                data-sub="Combinação completa e elegante"
+              >
+                <img
+                  src="imagem/c4.jpeg"
+                  alt="Estilo barba e cabelo"
+                  loading="lazy"
+                />
+                <div class="slide-caption">
+                  Combo corte+luzes - 50
+                  <small>Combinação completa e elegante</small>
+                </div>
+              </div>
+            </div>
+            <button class="slider-btn prev" onclick="moveSlide(-1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slider-btn next" onclick="moveSlide(1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="slider-dots" id="sliderDots"></div>
+        </div>
+
+        <!-- Info bar -->
+        <div class="info-bar">
+          <div class="info-item">
+            <i class="fas fa-clock"></i
+            ><span><strong>Segunda a Sábado</strong> — 08:00 às 19:00</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-phone-alt"></i
+            ><span
+              ><strong>Dono:</strong>
+              <a href="https://wa.me/558695604785" target="_blank"
+                >+55 86 9560-4785</a
+              ></span
+            >
+          </div>
+          <div class="info-item">
+            <i class="fas fa-map-pin"></i
+            ><span><strong>Local:</strong> Projeto lagoa Nova - PI</span>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-label">Na Fila</div>
+            <div class="stat-number gold" id="statWaiting">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-label">Finalizados</div>
+            <div class="stat-number green" id="statCompleted">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-label">Total de Atendimentos</div>
+            <div class="stat-number purple" id="statTotal">0</div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="form-card">
+          <div class="form-title">
+            <i
+              class="fas fa-scissors"
+              style="color: #c9a84c; margin-right: 10px"
+            ></i
+            >Faça seu agendamento
+          </div>
+          <div class="form-subtitle">
+            Preencha os dados, escolha o horário e confirme. Você será
+            redirecionado ao WhatsApp.
+          </div>
+
+          <form id="scheduleForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label>Seu nome <span class="required">*</span></label>
+              <input
+                class="form-control"
+                id="clientName"
+                type="text"
+                placeholder="Ex: João Silva"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Serviço desejado <span class="required">*</span></label>
+              <select class="form-control" id="clientService" required>
+                <option value="">Selecione...</option>
+                <option value="Combo corte+luzes - 50">
+                  ✂️ Combo corte+luzes - 50
+                </option>
+                <option value="Moica + trem - R$15">
+                  ✂️ Moica + trem - R$15
+                </option>
+                <option value="Combo Nevou+ Corte - R$60">
+                  ✂️ Combo Nevou+ Corte - R$60
+                </option>
+                <option value="Degradê - R$15">✂️ Degradê - R$15</option>
+                <option value="Moica-america - R$15">
+                  ✂️ Moica-america - R$15
+                </option>
+                <option value="Outro">📌 Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label
+                >Horário preferencial <span class="required">*</span></label
+              >
+              <select class="form-control" id="clientTime" required>
+                <option value="">Selecione...</option>
+                <option value="08:00">08:00</option>
+                <option value="08:10">08:10</option>
+                <option value="08:30">08:30</option>
+                <option value="08:50">08:50</option>
+                <option value="09:00">09:00</option>
+                <option value="09:10">09:10</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:10">10:10</option>
+                <option value="10:30">10:30</option>
+                <option value="10:50">10:50</option>
+                <option value="11:00">11:00</option>
+                <option value="11:10">11:10</option>
+                <option value="11:30">11:30</option>
+                <option value="11:50">11:50</option>
+                <option value="13:00">13:00</option>
+                <option value="13:10">13:10</option>
+                <option value="13:30">13:30</option>
+                <option value="13:50">13:50</option>
+                <option value="14:00">14:00</option>
+                <option value="14:10">14:10</option>
+                <option value="14:30">14:30</option>
+                <option value="14:50">14:50</option>
+                <option value="15:00">15:00</option>
+                <option value="15:10">15:10</option>
+                <option value="15:30">15:30</option>
+                <option value="15:50">15:50</option>
+                <option value="16:00">16:00</option>
+                <option value="16:10">16:10</option>
+                <option value="16:30">16:30</option>
+                <option value="16:50">16:50</option>
+                <option value="17:00">17:00</option>
+                <option value="17:10">17:10</option>
+                <option value="17:30">17:30</option>
+                <option value="17:50">17:50</option>
+                <option value="18:00">18:00</option>
+                <option value="18:10">18:10</option>
+                <option value="18:30">18:30</option>
+                <option value="18:50">18:50</option>
+                <option value="19:00">19:00</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fas fa-calendar-check"></i> Agendar
+              </button>
+              <button
+                type="reset"
+                class="btn btn-outline"
+                onclick="resetForm()"
+              >
+                <i class="fas fa-undo"></i> Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- VIEW: Admin Login -->
+      <div class="view" id="viewAdminLogin">
+        <div class="admin-login-box">
+          <div class="form-title">
+            <i
+              class="fas fa-user-shield"
+              style="color: #c9a84c; margin-right: 10px"
+            ></i
+            >Acesso Administrativo
+          </div>
+          <div class="form-subtitle">
+            Entre com suas credenciais para gerenciar os agendamentos.
+          </div>
+          <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+            <div class="form-group">
+              <label>E-mail</label>
+              <input
+                class="form-control"
+                id="adminEmail"
+                type="email"
+                placeholder="admin@barbearia.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Senha</label>
+              <input
+                class="form-control"
+                id="adminPassword"
+                type="password"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline"
+                onclick="toggleAdminView()"
+              >
+                <i class="fas fa-arrow-left"></i> Voltar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- VIEW: Admin Dashboard -->
+      <div class="view" id="viewAdminDashboard">
+        <div class="admin-header">
+          <h2><i class="fas fa-chart-simple"></i> Painel de Controle</h2>
+          <div class="admin-stats">
+            <span class="badge"
+              ><i class="fas fa-users"></i> Total:
+              <strong id="adminTotal">0</strong></span
+            >
+            <span class="badge" style="color: #c9a84c"
+              ><i class="fas fa-clock"></i> Fila:
+              <strong id="adminWaiting">0</strong></span
+            >
+            <span class="badge" style="color: #4cd9a8"
+              ><i class="fas fa-check"></i> Finalizados:
+              <strong id="adminCompleted">0</strong></span
+            >
+            <button class="btn btn-logout btn-sm" onclick="logoutAdmin()">
+              <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nome</th>
+                  <th>Contato</th>
+                  <th>Serviço</th>
+                  <th>Horário</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <tr>
+                  <td colspan="8" class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Nenhum agendamento encontrado.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top: 20px; text-align: center">
+          <button class="btn btn-outline" onclick="toggleAdminView()">
+            <i class="fas fa-arrow-left"></i> Voltar para o agendamento
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FIREBASE E SCRIPTS ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <!-- Configuração do Firebase (separado) -->
+    <script src="scrt.js"></script>
+
+    <!-- Lógica principal (separada) -->
+    <script src="style.js"></script>
+  </body>
+</html>
