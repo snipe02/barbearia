@@ -8,7 +8,7 @@ let lastBookingData = null;
 
 let currentSlide = 0;
 let slideInterval = null;
-const totalSlides = 5; // número de slides (c1.jpeg a c6.jpeg, mas são 5 no HTML)
+const totalSlides = 5;
 
 const $ = (id) => document.getElementById(id);
 const viewClient = $("viewClient");
@@ -45,16 +45,28 @@ function openLightbox(imgSrc, caption, sub) {
   lightboxCaption.innerHTML = `WesleyCort - ${caption} <small>${sub || ""}</small>`;
   lightbox.classList.add("open");
   document.body.style.overflow = "hidden";
+
+  // Fecha ao clicar na imagem
+  lightboxImg.onclick = function() {
+    closeLightbox();
+  };
 }
 
 function closeLightbox() {
   lightbox.classList.remove("open");
   document.body.style.overflow = "";
+  // Remove o evento para evitar conflitos
+  lightboxImg.onclick = null;
 }
 
+// Fechar com tecla ESC
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox();
 });
+
+// Fechar ao clicar no fundo (já tem no HTML onclick)
+// Mas vamos manter a função global
+window.closeLightbox = closeLightbox;
 
 // =============================================================
 //  SLIDER
@@ -135,7 +147,7 @@ async function updateStats() {
 //  NOTIFICAÇÃO PARA O DONO VIA WHATSAPP (CALLOBOT)
 // =============================================================
 function notifyOwner(appointmentData) {
-  // 🔑 Substitua pela sua chave de API do CallMeBot (https://www.callmebot.com/)
+  // 🔑 Substitua pela sua chave de API do CallMeBot
   const apiKey = "SUA_API_KEY";
   const ownerPhone = "558695604785";
   const message = `🔔 *NOVO AGENDAMENTO!*\n\n👤 *Cliente:* ${appointmentData.name}\n✂️ *Serviço:* ${appointmentData.service}\n🕒 *Horário:* ${appointmentData.time}\n\n✅ Agendamento registrado com sucesso.`;
@@ -417,17 +429,32 @@ auth.onAuthStateChanged((user) => {
 });
 
 // =============================================================
-//  CLIQUE NO LOGO → ABRE LIGHTBOX (com distinção de duplo clique)
+//  CLIQUE NO LOGO → TOGGLE LIGHTBOX
 // =============================================================
 const logoArea = document.getElementById("logoArea");
 let clickTimer = null;
 
 logoArea.addEventListener("click", function (e) {
+  // Se o lightbox estiver aberto, fechamos e não abrimos novamente
+  if (lightbox.classList.contains("open")) {
+    closeLightbox();
+    // Impede que o timer abra novamente
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+      clickTimer = null;
+    }
+    return;
+  }
+
+  // Se não estiver aberto, agendamos a abertura (com delay para distinguir do duplo clique)
   if (clickTimer) {
     clearTimeout(clickTimer);
     clickTimer = null;
+    // Se já havia um timer, significa que é um segundo clique rápido? 
+    // Vamos tratar como duplo clique mais tarde, mas por enquanto, cancelamos.
     return;
   }
+
   clickTimer = setTimeout(() => {
     const img = document.querySelector(".logo-icon img");
     if (img && img.src) {
@@ -438,13 +465,18 @@ logoArea.addEventListener("click", function (e) {
       openLightbox(img.src, title, sub);
     }
     clickTimer = null;
-  }, 300);
+  }, 300); // delay para distinguir duplo clique
 });
 
 logoArea.addEventListener("dblclick", function (e) {
+  // Cancela o timer de clique simples
   if (clickTimer) {
     clearTimeout(clickTimer);
     clickTimer = null;
+  }
+  // Se o lightbox estiver aberto, fechamos antes de abrir admin?
+  if (lightbox.classList.contains("open")) {
+    closeLightbox();
   }
   toggleAdminView();
   e.preventDefault();
@@ -453,17 +485,15 @@ logoArea.addEventListener("dblclick", function (e) {
 // =============================================================
 //  INICIALIZAÇÃO
 // =============================================================
-// Login anônimo (já feito no firebase-config.js, mas reforçamos aqui)
+// Login anônimo
 auth.signInAnonymously()
   .then(() => console.log("✅ Autenticado anonimamente."))
   .catch((error) => console.warn("⚠️ Login anônimo falhou:", error));
 
-// Inicia atualizações
 updateStats();
 setInterval(updateStats, 30000);
 initSlider();
 
-// Evento para tecla Enter no campo senha do admin
 document.getElementById("adminPassword").addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     document.getElementById("adminLoginForm").dispatchEvent(new Event("submit"));
@@ -476,4 +506,4 @@ console.log("📸 Galeria com Lightbox e legendas!");
 console.log("🕒 Verificação de horário ativa — não permite duplicatas.");
 console.log("⚡ Redirecionamento automático e imediato para WhatsApp.");
 console.log("🔒 Acesso admin: dê dois cliques no logotipo.");
-console.log("🖼️ Clique simples no logo → abre em tela cheia.");
+console.log("🖼️ Clique simples no logo → abre/fecha lightbox.");
